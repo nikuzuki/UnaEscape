@@ -1,30 +1,44 @@
+/*
+  UnaEscape
+*/
+
 enchant();
 
-/*
-
-Core
-- rootScene ゲームのシーン
---Sprite (bear) キャラ部品のこと
-
-*/
+const WIDTH = 480;
+const LENGTH = 480;
 
 window.onload = function(){
     //console.log("hello world");
 
-    var core = new Core(320, 320);  //Coreオブジェクト
+    var core = new Core(WIDTH, LENGTH);  //Coreオブジェクト
     core.preload('chara1.png');     // クマの画像を読みだす
+    core.preload('./images/ootoro.png');
+    core.preload('./images/obake.png');
     core.fps = 60;
+
+    core.keybind(65, "a");
+    core.keybind(68, "d");
+    core.keybind(83, "s");
+    core.keybind(87, "w");
+
     core.onload = function(){
 
-      var explain = new Label("うなすけを守れ"); // 説明文
+      var titleName = new Label("UnaScape");
+      titleName.x = WIDTH / 5;
+      titleName.y = LENGTH / 5;
 
-      explain.x = 100;
-      explain.y = 150;
+      var explain = new Label("wasdとマウスで生き残れ"); // 説明文
+
+      explain.x = WIDTH / 3;
+      explain.y = (LENGTH / 4) * 3;
 
       core.rootScene.backgroundColor = "#b38f76"; // 茶色っぽい背景
+      core.rootScene.addChild(titleName);
       core.rootScene.addChild(explain);
 
-      // 2つ目のシーン
+      /*
+        ゲームシーン(スコア稼ぎ)
+      */
       var second = new Scene();
       second.backgroundColor = "#FF9999";
 
@@ -39,23 +53,33 @@ window.onload = function(){
         core.pushScene(second);
       });
 
-      /*
-      var Bear = Class.create(Sprite, { // Spriteクラスから作る
-        initialize: function(x, y){
-          Sprite.call(this, 32, 32);  // spriteの時と同様
-          this.x = x;
-          this.y = y;
-          this.image = core.assets['chara1.png'];
-          this.frame = rand(5);
-          this.opacity = rand(100) / 100; // 透明度
-          this.on('enterframe', function(){
-            this.rotate(rand(10));
-          });
+      var ootoro = new Sprite(64, 45);
+      ootoro.image = core.assets['./images/ootoro.png'];
+      ootoro.x = 10;
+      ootoro.y = 10;
 
-          core.rootScene.addChild(this);
-        }
+      second.addChild(ootoro);
+
+      var hero = new Sprite(64, 64);
+      hero.image = core.assets['./images/obake.png'];
+      hero.scale(0.5, 0.5); // 大きさを半分
+      hero.x = WIDTH / 2;
+      hero.y = (LENGTH / 5) * 4;
+
+      hero.addEventListener('enterframe', function(){
+
+        // キー操作 画面からは出ないようにする
+        if (core.input.a)
+          if(hero.x >= -10) this.x -= 5;
+        if (core.input.d)
+          if(hero.x <= (WIDTH - 50)) this.x += 5;
+        if (core.input.w)
+          if(hero.y >= -10) this.y -= 5;
+        if (core.input.s)
+          if(hero.y <= (LENGTH - 50)) this.y += 5;
       });
-      */
+
+      second.addChild(hero);
 
     }
 
