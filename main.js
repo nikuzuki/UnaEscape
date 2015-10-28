@@ -47,18 +47,57 @@ window.onload = function(){
       secondMessage.y = 10;
       second.addChild(secondMessage);
 
+      // TODO: スコア実装
+
       // がめんをタッチ後、secondSceneへ移行
 
       core.rootScene.addEventListener('touchstart', function(){
         core.pushScene(second);
       });
 
-      var ootoro = new Sprite(64, 45);
-      ootoro.image = core.assets['./images/ootoro.png'];
-      ootoro.x = 10;
-      ootoro.y = 10;
+      var Ootoro = Class.create(Sprite, { // Spriteクラスから作る
+        initialize: function(x, y){
+          Sprite.call(this, 64, 45);  // spriteの時と同様
+          this.x = x;
+          this.y = y;
+          this.image = core.assets['./images/ootoro.png'];
+          this.on('enterframe', function(){
+            this.rotate(5);
+          });
+          // TODO: 大トロの動きと判定を書く(判定はhero側でも良い)
+          // TODO: クリック時のスコアインクリメント処理を書く
+          /*
+          this.tl.moveBy(rand(100), 0, 200, enchant.Easing.BOUNCE_EASEOUT) // 40フレームの間横に移動　縦は0
+                 .moveBy(-rand(100), -rand(20), rand(20))
+                 .fadeOut(20)
+                 .fadeIn(10)
+                 .loop();
+          */
+          second.addChild(this);
+        }
+      });
 
-      second.addChild(ootoro);
+      var ootoros = [];
+      var area = 0;
+      for(var i = 0; i < 100; i++){
+        // 大トロが飛んで来る場所を決める
+        area = rand(4); // 0 ~ 3
+        switch(area){
+          case 0: // 上から
+            ootoros[i] = new Ootoro(rand(WIDTH), -55);
+            break;
+          case 1: // 右から
+            ootoros[i] = new Ootoro((WIDTH + 20), rand(LENGTH));
+            break;
+          case 2: // 下から
+            ootoros[i] = new Ootoro(rand(WIDTH), (LENGTH + 20));
+            break;
+          case 3: // 左から
+            ootoros[i] = new Ootoro(-60, rand(LENGTH));
+            break;
+        }
+        // TODO: 大トロがどのようにして画面端から出るのかを考え実装
+      }
 
       var hero = new Sprite(64, 64);
       hero.image = core.assets['./images/obake.png'];
@@ -68,7 +107,7 @@ window.onload = function(){
 
       hero.addEventListener('enterframe', function(){
 
-        // キー操作 画面からは出ないようにする
+        // キー操作(wasd) 画面からは出ないようにする
         if (core.input.a)
           if(hero.x >= -10) this.x -= 5;
         if (core.input.d)
@@ -78,6 +117,8 @@ window.onload = function(){
         if (core.input.s)
           if(hero.y <= (LENGTH - 50)) this.y += 5;
       });
+
+      // TODO: 上から降って来るイクラの実装 何個かに一つ追尾
 
       second.addChild(hero);
 
