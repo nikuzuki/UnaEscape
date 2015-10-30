@@ -20,6 +20,7 @@ window.onload = function(){
     core.keybind(68, "d");
     core.keybind(83, "s");
     core.keybind(87, "w");
+    core.keybind(16, "shift");
 
     core.onload = function(){
 
@@ -27,7 +28,7 @@ window.onload = function(){
       titleName.x = WIDTH / 5;
       titleName.y = LENGTH / 5;
 
-      var explain = new Label("wasdとマウスで生き残れ"); // 説明文
+      var explain = new Label("wasd(shiftで低速)とマウスで生き残れ"); // 説明文
 
       explain.x = WIDTH / 3;
       explain.y = (LENGTH / 4) * 3;
@@ -39,10 +40,11 @@ window.onload = function(){
       /*
         ゲームシーン(スコア稼ぎ)
       */
+
       var second = new Scene();
       second.backgroundColor = "#FF9999";
 
-      var secondMessage = new Label("Hello, secondScene");
+      var secondMessage = new Label("がんばれ");
       secondMessage.x = 10;
       secondMessage.y = 10;
       second.addChild(secondMessage);
@@ -55,6 +57,12 @@ window.onload = function(){
         core.pushScene(second);
       });
 
+      var score = new Label("score : 0");
+      score.x = (WIDTH / 3) * 2;
+      score.y = 10;
+
+      second.addChild(score);
+
       var Ootoro = Class.create(Sprite, { // Spriteクラスから作る
         initialize: function(x, y){
           Sprite.call(this, 64, 45);  // spriteの時と同様
@@ -66,13 +74,7 @@ window.onload = function(){
           });
           // TODO: 大トロの動きと判定を書く(判定はhero側でも良い)
           // TODO: クリック時のスコアインクリメント処理を書く
-          /*
-          this.tl.moveBy(rand(100), 0, 200, enchant.Easing.BOUNCE_EASEOUT) // 40フレームの間横に移動　縦は0
-                 .moveBy(-rand(100), -rand(20), rand(20))
-                 .fadeOut(20)
-                 .fadeIn(10)
-                 .loop();
-          */
+          
           second.addChild(this);
         }
       });
@@ -99,6 +101,10 @@ window.onload = function(){
         // TODO: 大トロがどのようにして画面端から出るのかを考え実装
       }
 
+      /*
+      キャラ操作
+      */
+
       var hero = new Sprite(64, 64);
       hero.image = core.assets['./images/obake.png'];
       hero.scale(0.5, 0.5); // 大きさを半分
@@ -107,15 +113,27 @@ window.onload = function(){
 
       hero.addEventListener('enterframe', function(){
 
-        // キー操作(wasd) 画面からは出ないようにする
-        if (core.input.a)
-          if(hero.x >= -10) this.x -= 5;
-        if (core.input.d)
-          if(hero.x <= (WIDTH - 50)) this.x += 5;
-        if (core.input.w)
-          if(hero.y >= -10) this.y -= 5;
-        if (core.input.s)
-          if(hero.y <= (LENGTH - 50)) this.y += 5;
+
+        if (core.input.shift){
+          if (core.input.a)
+            if(hero.x >= -10) this.x -= 2.5;
+          if (core.input.d)
+            if(hero.x <= (WIDTH - 50)) this.x += 2.5;
+          if (core.input.w)
+            if(hero.y >= -10) this.y -= 2.5;
+          if (core.input.s)
+            if(hero.y <= (LENGTH - 50)) this.y += 2.5;
+        }
+        else {
+          if (core.input.a)
+            if(hero.x >= -10) this.x -= 5;
+          if (core.input.d)
+            if(hero.x <= (WIDTH - 50)) this.x += 5;
+          if (core.input.w)
+            if(hero.y >= -10) this.y -= 5;
+          if (core.input.s)
+            if(hero.y <= (LENGTH - 50)) this.y += 5;
+        }
       });
 
       // TODO: 上から降って来るイクラの実装 何個かに一つ追尾
