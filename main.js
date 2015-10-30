@@ -76,16 +76,6 @@ window.onload = function(){
       timeLabel.y = 10;
 
       second.addChild(timeLabel);
-      // secondシーンに入ったら、タイマースタート
-      second.addEventListener('enterframe', function(){
-        timeLeft--;
-        timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
-
-        if(timeLeft <= 0){
-          alert('Your score' + score);
-          this.stop();
-        }
-      });
 
 
       /*
@@ -149,7 +139,7 @@ window.onload = function(){
 
           });
 
-          this.tl.moveTo(hero.x, hero.y, 250);
+          this.tl.moveTo(hero.x, hero.y, 200);
 
           // TODO: 大トロの動きと判定を書く(判定はhero側でも良い)
 
@@ -158,29 +148,45 @@ window.onload = function(){
         }
       });
 
+      // TODO: 大トロがどのようにして画面端から出るのかを考え実装
+
       var ootoros = [];
       var area = 0;
-      for(var i = 0; i < 100; i++){
-        // 大トロが飛んで来る場所を決める
+      var toroCount = 0;
 
-        //if()
-        area = rand(4); // 0 ~ 3
-        switch(area){
-          case 0: // 上から
-            ootoros[i] = new Ootoro(rand(WIDTH), -55);
-            break;
-          case 1: // 右から
-            ootoros[i] = new Ootoro((WIDTH + 20), rand(LENGTH));
-            break;
-          case 2: // 下から
-            ootoros[i] = new Ootoro(rand(WIDTH), (LENGTH + 20));
-            break;
-          case 3: // 左から
-            ootoros[i] = new Ootoro(-65, rand(LENGTH));
-            break;
+      // secondシーンに入ったら、タイマースタート
+      second.addEventListener('enterframe', function(){
+        timeLeft--;
+        // 時間を整数値にして出力
+        // timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
+        timeLabel.text = 'Time: ' + timeLeft;
+
+        if((timeLeft % 30) == 0){
+          // 大トロが飛んで来る場所を決める
+          console.log('うぇい');
+          area = rand(4); // 0 ~ 3
+          switch(area){
+            case 0: // 上から
+              ootoros[toroCount] = new Ootoro(rand(WIDTH), -55);
+              break;
+            case 1: // 右から
+              ootoros[toroCount] = new Ootoro((WIDTH + 20), rand(LENGTH));
+              break;
+            case 2: // 下から
+              ootoros[toroCount] = new Ootoro(rand(WIDTH), (LENGTH + 20));
+              break;
+            case 3: // 左から
+              ootoros[toroCount] = new Ootoro(-60, rand(LENGTH));
+              break;
+          }
+          toroCount++;
         }
-        // TODO: 大トロがどのようにして画面端から出るのかを考え実装
-      }
+
+        if(timeLeft <= 0){
+          alert('Your score' + score);
+          this.stop();
+        }
+      });
 
     }
 
