@@ -16,7 +16,7 @@ window.onload = function(){
     core.preload('./images/obake.png');
     core.fps = 60;
 
-    var timeLeft = 100 * core.fps;
+    var timeLeft = 10 * core.fps;
 
     core.keybind(65, "a");
     core.keybind(68, "d");
@@ -139,10 +139,8 @@ window.onload = function(){
 
           });
 
-          this.tl.moveTo(hero.x, hero.y, 200);
-
-          // TODO: 大トロの動きと判定を書く(判定はhero側でも良い)
-
+          // hero狙い
+          this.tl.moveTo(hero.x, hero.y, 100);
 
           second.addChild(this);
         }
@@ -158,12 +156,9 @@ window.onload = function(){
       second.addEventListener('enterframe', function(){
         timeLeft--;
         // 時間を整数値にして出力
-        // timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
-        timeLabel.text = 'Time: ' + timeLeft;
-
+        timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
         if((timeLeft % 30) == 0){
           // 大トロが飛んで来る場所を決める
-          console.log('うぇい');
           area = rand(4); // 0 ~ 3
           switch(area){
             case 0: // 上から
@@ -183,10 +178,34 @@ window.onload = function(){
         }
 
         if(timeLeft <= 0){
-          alert('Your score' + score);
-          this.stop();
+
+          //時間切れでゲームオーバーシーンへ移る
+          core.pushScene(GameOverScene);
         }
       });
+
+    /*
+      GameOverシーン
+    */
+
+    var GameOverScene = new Scene();
+    GameOverScene.backgroundColor = "#9fd4ff";
+
+    var GameOverMessage = new Label();
+    GameOverMessage.text = 'GAMEOVER!';
+    GameOverMessage.x = WIDTH/2;
+    GameOverMessage.y = LENGTH/2;
+
+    var GameOverScore = new Label();
+    GameOverScore.text = 'Your score is' + score;
+    GameOverScore.x = WIDTH/2;
+    GameOverScore.y = (LENGTH/2) + 30;
+
+    GameOverScene.addChild(GameOverMessage);
+    GameOverScene.addChild(GameOverScore);
+
+
+
 
     }
 
