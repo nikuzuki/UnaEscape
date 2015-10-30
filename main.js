@@ -147,8 +147,6 @@ window.onload = function(){
         }
       });
 
-      // TODO: 大トロがどのようにして画面端から出るのかを考え実装
-
       var ootoros = [];
       var area = 0;
       var toroCount = 0;
@@ -225,6 +223,8 @@ window.onload = function(){
       location.href = twitter_url+ EUC(message);
     });
     GameOverScene.addChild(tweet_label);
+
+    // TODO: タイムアップ時と判定でゲームオーバー時で出力するテキストを変える
 
   }
 
