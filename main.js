@@ -16,6 +16,8 @@ window.onload = function(){
     core.preload('./images/obake.png');
     core.fps = 60;
 
+    var timeLeft = 100 * core.fps;
+
     core.keybind(65, "a");
     core.keybind(68, "d");
     core.keybind(83, "s");
@@ -49,57 +51,42 @@ window.onload = function(){
       secondMessage.y = 10;
       second.addChild(secondMessage);
 
-      // TODO: スコア実装
-
       // がめんをタッチ後、secondSceneへ移行
 
       core.rootScene.addEventListener('touchstart', function(){
         core.pushScene(second);
       });
 
-      var score = new Label("score : 0");
-      score.x = (WIDTH / 3) * 2;
-      score.y = 10;
+      /*
+        スコア
+      */
+      var score = 0;
+      var scoreLabel = new Label("score : " + score);
+      scoreLabel.x = (WIDTH / 3) * 2;
+      scoreLabel.y = 10;
 
-      second.addChild(score);
+      second.addChild(scoreLabel);
 
-      var Ootoro = Class.create(Sprite, { // Spriteクラスから作る
-        initialize: function(x, y){
-          Sprite.call(this, 64, 45);  // spriteの時と同様
-          this.x = x;
-          this.y = y;
-          this.image = core.assets['./images/ootoro.png'];
-          this.on('enterframe', function(){
-            this.rotate(5);
-          });
-          // TODO: 大トロの動きと判定を書く(判定はhero側でも良い)
-          // TODO: クリック時のスコアインクリメント処理を書く
-          
-          second.addChild(this);
+      /*
+        タイム
+      */
+
+      var timeLabel = new Label('Time: ?');
+      timeLabel.x = WIDTH / 2;
+      timeLabel.y = 10;
+
+      second.addChild(timeLabel);
+      // secondシーンに入ったら、タイマースタート
+      second.addEventListener('enterframe', function(){
+        timeLeft--;
+        timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
+
+        if(timeLeft <= 0){
+          alert('Your score' + score);
+          this.stop();
         }
       });
 
-      var ootoros = [];
-      var area = 0;
-      for(var i = 0; i < 100; i++){
-        // 大トロが飛んで来る場所を決める
-        area = rand(4); // 0 ~ 3
-        switch(area){
-          case 0: // 上から
-            ootoros[i] = new Ootoro(rand(WIDTH), -55);
-            break;
-          case 1: // 右から
-            ootoros[i] = new Ootoro((WIDTH + 20), rand(LENGTH));
-            break;
-          case 2: // 下から
-            ootoros[i] = new Ootoro(rand(WIDTH), (LENGTH + 20));
-            break;
-          case 3: // 左から
-            ootoros[i] = new Ootoro(-60, rand(LENGTH));
-            break;
-        }
-        // TODO: 大トロがどのようにして画面端から出るのかを考え実装
-      }
 
       /*
       キャラ操作
@@ -139,6 +126,61 @@ window.onload = function(){
       // TODO: 上から降って来るイクラの実装 何個かに一つ追尾
 
       second.addChild(hero);
+
+      /*
+        大トロ
+      */
+
+      var Ootoro = Class.create(Sprite, { // Spriteクラスから作る
+        initialize: function(x, y){
+          Sprite.call(this, 64, 45);  // spriteの時と同様
+          this.x = x;
+          this.y = y;
+          this.image = core.assets['./images/ootoro.png'];
+          this.on('enterframe', function(){
+            this.rotate(5);
+          });
+
+          // タッチで消え、スコアを増やす
+          this.on('touchstart', function(){
+            score++;
+            scoreLabel.text = 'Score: ' + score;
+            second.removeChild(this);
+
+          });
+
+          this.tl.moveTo(hero.x, hero.y, 250);
+
+          // TODO: 大トロの動きと判定を書く(判定はhero側でも良い)
+
+
+          second.addChild(this);
+        }
+      });
+
+      var ootoros = [];
+      var area = 0;
+      for(var i = 0; i < 100; i++){
+        // 大トロが飛んで来る場所を決める
+
+        //if()
+        area = rand(4); // 0 ~ 3
+        switch(area){
+          case 0: // 上から
+            ootoros[i] = new Ootoro(rand(WIDTH), -55);
+            break;
+          case 1: // 右から
+            ootoros[i] = new Ootoro((WIDTH + 20), rand(LENGTH));
+            break;
+          case 2: // 下から
+            ootoros[i] = new Ootoro(rand(WIDTH), (LENGTH + 20));
+            break;
+          case 3: // 左から
+            ootoros[i] = new Ootoro(-65, rand(LENGTH));
+            break;
+        }
+        // TODO: 大トロがどのようにして画面端から出るのかを考え実装
+      }
 
     }
 
