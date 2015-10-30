@@ -7,6 +7,8 @@ enchant();
 const WIDTH = 480;
 const LENGTH = 480;
 
+var score = 0;
+
 window.onload = function(){
     //console.log("hello world");
 
@@ -60,7 +62,6 @@ window.onload = function(){
       /*
         スコア
       */
-      var score = 0;
       var scoreLabel = new Label("score : " + score);
       scoreLabel.x = (WIDTH / 3) * 2;
       scoreLabel.y = 10;
@@ -191,25 +192,44 @@ window.onload = function(){
     var GameOverScene = new Scene();
     GameOverScene.backgroundColor = "#9fd4ff";
 
+    // ゲームオーバーのメッセージ
     var GameOverMessage = new Label();
     GameOverMessage.text = 'GAMEOVER!';
-    GameOverMessage.x = WIDTH/2;
-    GameOverMessage.y = LENGTH/2;
+    GameOverMessage.x = WIDTH/4;
+    GameOverMessage.y = LENGTH/3;
 
+    // ゲームオーバー時のスコア表示
     var GameOverScore = new Label();
-    GameOverScore.text = 'Your score is' + score;
-    GameOverScore.x = WIDTH/2;
-    GameOverScore.y = (LENGTH/2) + 30;
+
+    GameOverScore.on('enterframe', function(){
+      GameOverScore.text = 'Your score is ' + score + '.';
+    });
+
+    GameOverScore.x = WIDTH/4;
+    GameOverScore.y = (LENGTH/3) + 30;
 
     GameOverScene.addChild(GameOverMessage);
     GameOverScene.addChild(GameOverScore);
 
+    // ツイートボタン
+    var tweet_label = new Label("white");
+    tweet_label.x = WIDTH/2;
+    tweet_label.y = (LENGTH/3) *2;
+    tweet_label.text = "Tweetする";
+    // タッチイベントを登録
+    tweet_label.addEventListener('touchstart', function(){
+      var EUC = encodeURIComponent;
+      var twitter_url = "http://twitter.com/?status=";
+      var message = "あなたのスコアは " + score + " point です. testです. \n #nikuzuki";
+      // Twitter に移動
+      location.href = twitter_url+ EUC(message);
+    });
+    GameOverScene.addChild(tweet_label);
 
+  }
 
+  core.start();
 
-    }
-
-    core.start();
 };
 
 function rand(n){
