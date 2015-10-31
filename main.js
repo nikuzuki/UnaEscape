@@ -8,6 +8,7 @@ const WIDTH = 480;
 const LENGTH = 480;
 
 var score = 0;
+var couseOfDeath = "";
 
 window.onload = function(){
     //console.log("hello world");
@@ -16,9 +17,10 @@ window.onload = function(){
     core.preload('chara1.png');     // クマの画像を読みだす
     core.preload('./images/ootoro.png');
     core.preload('./images/obake.png');
+    core.preload('./images/ikura.png');
     core.fps = 60;
 
-    var timeLeft = 10 * core.fps;
+    var timeLeft = 100 * core.fps;
 
     core.keybind(65, "a");
     core.keybind(68, "d");
@@ -143,13 +145,78 @@ window.onload = function(){
           // hero狙い
           this.tl.moveTo(hero.x, hero.y, 100);
 
+          // 判定処理
+          this.addEventListener('enterframe', function(){
+
+            //　中央に触れるまでセーフ
+            if(this.within(hero, 20)){
+              couseOfDeath = "大トロに衝突して死亡";
+              core.pushScene(GameOverScene);  // ゲームオーバー処理をする
+            }
+
+
+            /*
+            // ゲームとは思えない難易度になるため使用しない
+            if(this.intersect(hero)){
+              couseOfDeath = "大トロに接触して死亡";
+              console.log = '大トロ';
+              core.pushScene(GameOverScene);
+            }
+            */
+
+          });
+
+          second.addChild(this);
+        }
+      });
+
+      /*
+        イクラ
+      */
+
+      var Ikura = Class.create(Sprite, { // Spriteクラスから作る
+        initialize: function(x, y){
+          Sprite.call(this, 64, 62);  // spriteの時と同様
+          this.x = x;
+          this.y = y;
+          this.image = core.assets['./images/ikura.png'];
+          this.on('enterframe', function(){
+            this.rotate(-15);
+          });
+
+          // ランダムな位置に落下 そして弾む
+          this.tl.moveTo(rand(WIDTH), LENGTH, 300,  enchant.Easing.BOUNCE_EASEOUT);
+
+          // 判定処理
+          this.addEventListener('enterframe',function(){
+
+            // 恐らくイージーモード　中央に触れるまでセーフ
+            if(this.within(hero, 20)){
+              couseOfDeath = "イクラに衝突して死亡";
+              core.pushScene(GameOverScene);  // ゲームオーバー処理をする
+            }
+
+            /*
+            // 触れれば死ぬ
+            if(this.intersect(hero)){
+              couseOfDeath = "イクラに接触して死亡";
+              console.log = 'イクラ';
+              core.pushScene(GameOverScene);
+            }
+            */
+
+
+          });
           second.addChild(this);
         }
       });
 
       var ootoros = [];
-      var area = 0;
+      var ikuras = [];
+      var ootoroArea = 0;
       var toroCount = 0;
+      var ikuraArea = 0;
+      var ikuraCount = 0;
 
       // secondシーンに入ったら、タイマースタート
       second.addEventListener('enterframe', function(){
@@ -158,8 +225,8 @@ window.onload = function(){
         timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
         if((timeLeft % 30) == 0){
           // 大トロが飛んで来る場所を決める
-          area = rand(4); // 0 ~ 3
-          switch(area){
+          ootoroArea = rand(4); // 0 ~ 3
+          switch(ootoroArea){
             case 0: // 上から
               ootoros[toroCount] = new Ootoro(rand(WIDTH), -55);
               break;
@@ -173,15 +240,33 @@ window.onload = function(){
               ootoros[toroCount] = new Ootoro(-60, rand(LENGTH));
               break;
           }
+
           toroCount++;
+        }
+        // イクラは上からランダムに降らせる
+        if((timeLeft % 10) == 0){
+          ikuras[ikuraCount] = new Ikura(rand(WIDTH), -10);
+          ikuraCount++;
         }
 
         if(timeLeft <= 0){
-
+          couseOfDeath = "時間切れで死亡";
           //時間切れでゲームオーバーシーンへ移る
           core.pushScene(GameOverScene);
         }
       });
+
+    /*
+      中間エリア スコア129を達成した時のみ
+    */
+
+    /*
+      発狂シーン 生きて返すつもりはない
+    */
+
+    /*
+      真のゲームオーバーシーン 万が一クリアされた時のみ
+    */
 
     /*
       GameOverシーン
@@ -196,18 +281,27 @@ window.onload = function(){
     GameOverMessage.x = WIDTH/4;
     GameOverMessage.y = LENGTH/3;
 
+    // 死因メッセージ
+
+    var GameOverReason = new Label();
+
     // ゲームオーバー時のスコア表示
     var GameOverScore = new Label();
 
     GameOverScore.on('enterframe', function(){
       GameOverScore.text = 'Your score is ' + score + '.';
+      GameOverReason.text = couseOfDeath;
     });
 
     GameOverScore.x = WIDTH/4;
     GameOverScore.y = (LENGTH/3) + 30;
 
+    GameOverReason.x = WIDTH/4;
+    GameOverReason.y = (LENGTH/3) + 60;
+
     GameOverScene.addChild(GameOverMessage);
     GameOverScene.addChild(GameOverScore);
+    GameOverScene.addChild(GameOverReason);
 
     // ツイートボタン
     var tweet_label = new Label("white");
@@ -218,7 +312,7 @@ window.onload = function(){
     tweet_label.addEventListener('touchstart', function(){
       var EUC = encodeURIComponent;
       var twitter_url = "http://twitter.com/?status=";
-      var message = "あなたのスコアは " + score + " point です. testです. \n #nikuzuki";
+      var message = "UnaScape\n" + couseOfDeath + "\nスコアは " + score + " point";
       // Twitter に移動
       location.href = twitter_url+ EUC(message);
     });
