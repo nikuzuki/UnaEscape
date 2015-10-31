@@ -157,7 +157,7 @@ window.onload = function(){
           });
 
           // hero狙い
-          this.tl.moveTo(hero.x, hero.y, 100);
+          this.tl.moveTo(hero.x, hero.y, 200);
 
           // 判定処理
           this.addEventListener('enterframe', function(){
@@ -199,7 +199,7 @@ window.onload = function(){
           });
 
           // ランダムな位置に落下 そして弾む
-          this.tl.moveTo(rand(WIDTH), LENGTH, 300,  enchant.Easing.BOUNCE_EASEOUT);
+          this.tl.moveTo(rand(WIDTH), LENGTH, 400,  enchant.Easing.BOUNCE_EASEOUT);
 
           // 判定処理
           this.addEventListener('enterframe',function(){
@@ -259,7 +259,7 @@ window.onload = function(){
         }
         // イクラは上からランダムに降らせる
         if((timeLeft % 15) == 0){
-          ikuras[ikuraCount] = new Ikura(rand(WIDTH), -10);
+          ikuras[ikuraCount] = new Ikura(rand(WIDTH), -50);
           ikuraCount++;
         }
 
@@ -326,7 +326,7 @@ window.onload = function(){
     tweet_label.addEventListener('touchstart', function(){
       var EUC = encodeURIComponent;
       var twitter_url = "http://twitter.com/?status=";
-      var message = "UnaScape\n" + couseOfDeath + "\nスコアは " + score + " point";
+      var message = "UnaScape(β)\n" + couseOfDeath + "\nスコアは " + score + " point";
       // Twitter に移動
       location.href = twitter_url+ EUC(message);
     });
