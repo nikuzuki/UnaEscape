@@ -158,7 +158,7 @@ window.onload = function(){
           // 判定処理
           this.addEventListener('enterframe', function(){
 
-            //　中央に触れるまでセーフ
+            // 中央に触れるまでセーフ
             if(this.within(hero, 20)){
               couseOfDeath = "大トロに衝突して死亡";
               core.pushScene(GameOverScene);  // ゲームオーバー処理をする
@@ -199,7 +199,7 @@ window.onload = function(){
           // 判定処理
           this.addEventListener('enterframe',function(){
 
-            // 恐らくイージーモード　中央に触れるまでセーフ
+            // 恐らくイージーモード 中央に触れるまでセーフ
             if(this.within(hero, 20)){
               couseOfDeath = "イクラに衝突して死亡";
               core.pushScene(GameOverScene);  // ゲームオーバー処理をする
