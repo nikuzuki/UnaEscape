@@ -11,10 +11,8 @@ var score = 0;
 var couseOfDeath = "";
 
 window.onload = function(){
-    //console.log("hello world");
 
     var core = new Core(WIDTH, LENGTH);  //Coreオブジェクト
-    core.preload('chara1.png');     // クマの画像を読みだす
     core.preload('./images/ootoro.png');
     core.preload('./images/obake.png');
     core.preload('./images/ikura.png');
@@ -40,15 +38,15 @@ window.onload = function(){
       var hint3 = new Label("Hint3: イクラは消せません!ごめんね!");
 
 
-      explain.x = WIDTH/3;
-      explain.y = LENGTH/2;
+      explain.x = WIDTH / 3;
+      explain.y = LENGTH / 2;
 
-      hint1.x = WIDTH/3;
-      hint2.x = WIDTH/3;
-      hint3.x = WIDTH/3;
-      hint1.y = (LENGTH/2) + 60;
-      hint2.y = (LENGTH/2) + 90;
-      hint3.y = (LENGTH/2) + 120;
+      hint1.x = WIDTH / 3;
+      hint2.x = WIDTH / 3;
+      hint3.x = WIDTH / 3;
+      hint1.y = (LENGTH / 2) + 60;
+      hint2.y = (LENGTH / 2) + 90;
+      hint3.y = (LENGTH / 2) + 120;
 
       core.rootScene.backgroundColor = "#b38f76"; // 茶色っぽい背景
       core.rootScene.addChild(titleName);
@@ -130,8 +128,6 @@ window.onload = function(){
         }
       });
 
-      // TODO: 上から降って来るイクラの実装 何個かに一つ追尾
-
       second.addChild(hero);
 
       /*
@@ -173,7 +169,6 @@ window.onload = function(){
             // ゲームとは思えない難易度になるため使用しない
             if(this.intersect(hero)){
               couseOfDeath = "大トロに接触して死亡";
-              console.log = '大トロ';
               core.pushScene(GameOverScene);
             }
             */
@@ -214,7 +209,6 @@ window.onload = function(){
             // 触れれば死ぬ
             if(this.intersect(hero)){
               couseOfDeath = "イクラに接触して死亡";
-              console.log = 'イクラ';
               core.pushScene(GameOverScene);
             }
             */
@@ -307,11 +301,11 @@ window.onload = function(){
       GameOverReason.text = couseOfDeath;
     });
 
-    GameOverScore.x = WIDTH/4;
-    GameOverScore.y = (LENGTH/3) + 30;
+    GameOverScore.x = WIDTH / 4;
+    GameOverScore.y = (LENGTH / 3) + 30;
 
-    GameOverReason.x = WIDTH/4;
-    GameOverReason.y = (LENGTH/3) + 60;
+    GameOverReason.x = WIDTH / 4;
+    GameOverReason.y = (LENGTH / 3) + 60;
 
     GameOverScene.addChild(GameOverMessage);
     GameOverScene.addChild(GameOverScore);
@@ -319,8 +313,8 @@ window.onload = function(){
 
     // ツイートボタン
     var tweet_label = new Label("white");
-    tweet_label.x = WIDTH/2;
-    tweet_label.y = (LENGTH/3) *2;
+    tweet_label.x = WIDTH / 2;
+    tweet_label.y = (LENGTH / 3) *2;
     tweet_label.text = "Tweetする";
     // タッチイベントを登録
     tweet_label.addEventListener('touchstart', function(){
@@ -332,8 +326,6 @@ window.onload = function(){
     });
     GameOverScene.addChild(tweet_label);
 
-    // TODO: タイムアップ時と判定でゲームオーバー時で出力するテキストを変える
-
   }
 
   core.start();
@@ -341,5 +333,5 @@ window.onload = function(){
 };
 
 function rand(n){
-  return Math.floor(Math.random() * (n+1)); // 0以上1未満の値*(n+1)の最大の整数値を返す
+  return Math.floor(Math.random() * (n + 1)); // 0以上1未満の値*(n+1)の最大の整数値を返す
 }
