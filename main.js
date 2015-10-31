@@ -35,13 +35,27 @@ window.onload = function(){
       titleName.y = LENGTH / 5;
 
       var explain = new Label("wasd(shiftで低速)とマウスで生き残れ"); // 説明文
+      var hint1 = new Label("Hint1: 大トロはクリックすれば消せます");
+      var hint2 = new Label("Hint2: 大トロを消すことでスコアが増えます");
+      var hint3 = new Label("Hint3: イクラは消せません!ごめんね!");
 
-      explain.x = WIDTH / 3;
-      explain.y = (LENGTH / 4) * 3;
+
+      explain.x = WIDTH/3;
+      explain.y = LENGTH/2;
+
+      hint1.x = WIDTH/3;
+      hint2.x = WIDTH/3;
+      hint3.x = WIDTH/3;
+      hint1.y = (LENGTH/2) + 60;
+      hint2.y = (LENGTH/2) + 90;
+      hint3.y = (LENGTH/2) + 120;
 
       core.rootScene.backgroundColor = "#b38f76"; // 茶色っぽい背景
       core.rootScene.addChild(titleName);
       core.rootScene.addChild(explain);
+      core.rootScene.addChild(hint1);
+      core.rootScene.addChild(hint2);
+      core.rootScene.addChild(hint3);
 
       /*
         ゲームシーン(スコア稼ぎ)
@@ -223,7 +237,7 @@ window.onload = function(){
         timeLeft--;
         // 時間を整数値にして出力
         timeLabel.text = 'Time: ' + parseInt(timeLeft / 60);
-        if((timeLeft % 30) == 0){
+        if((timeLeft % 40) == 0){
           // 大トロが飛んで来る場所を決める
           ootoroArea = rand(4); // 0 ~ 3
           switch(ootoroArea){
@@ -244,7 +258,7 @@ window.onload = function(){
           toroCount++;
         }
         // イクラは上からランダムに降らせる
-        if((timeLeft % 10) == 0){
+        if((timeLeft % 15) == 0){
           ikuras[ikuraCount] = new Ikura(rand(WIDTH), -10);
           ikuraCount++;
         }
