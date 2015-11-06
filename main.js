@@ -159,7 +159,7 @@ window.onload = function(){
           this.addEventListener('enterframe', function(){
 
             // 中央に触れるまでセーフ
-            if(this.within(hero, 20)){
+            if(this.within(hero, 40)){
               couseOfDeath = "大トロに衝突して死亡";
               core.pushScene(GameOverScene);  // ゲームオーバー処理をする
             }
